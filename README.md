@@ -59,9 +59,11 @@ I'm not sure if I can just upload this code to GitHub and then reference it - or
 
 Specifically, I used the functions:
 - `gbm.step`:
+
 > fits a gbm model to one or more response variables, using cross-validation to estimate the optimal number of trees.
 
 - `gbm.plot`:
+
 > Plots the partial dependence of the response on one or more predictors.
 
 There are a few other components that can be used from the elith et al (2008) supplementary materials - `gbm.fixed`, `gbm.holdout`, `gbm.simplify`, `gbm.plot.fits`, `gbm.interactions`, `gbm.perspec`, `gbm.predict.grids`. 
