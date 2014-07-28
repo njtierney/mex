@@ -7,3 +7,5 @@
 # R data files from past sessions
 .Rdata
 .Rproj.user
+
+vignettes/draft-vignette_cache/html/__packages
