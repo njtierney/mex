@@ -1,35 +1,40 @@
 #' @title sim_miss_data
 #'
 #' @description
-#' \code{sim_miss_ata} generates a dataframe with a specified missingness pattern.
+#' \code{sim_miss_data} generates a dataframe with a specified missingness
+#' pattern.
 #'
 #' @details
-#' This function gives the user a great deal of control over creating different patterns
-#' of missingness, however it was created with a specific purpose in mind, and so it 
-#' really requires a lot of work, right now.
+#' This function gives the user a great deal of control over creating different
+#' patterns of missingness, however it was created with a specific purpose in 
+#' mind, and so it might actually need to be broken up into a couple of 
+#' different functions, as it is quite a large function.
 #' 
-#' @param data      data you want to inflict the missingness on
+#' @param data      dataset you want to inflict the missingness on
 #' @param R         Number of datasets you want.
 #' @param miss.perc percent of missing data you want (approximately)
-#' @param var       which variable instigates the missingness?
-#' @param varlist   which variables are being used in the dataset?
+#' @param var       which variable will cause the missingness?
+#' @param varlist   which variables will be used in the dataset?
 #' @param dv_miss_prob    set the probability that the dv will go missing
-#' @param miss.bound.on   set the missing boundary on - this will create a 
-#'                        MNAR/MAR scenario
+#' @param miss.bound.on   set the missing boundary on, creating a MNAR/MAR 
+#'                        scenario.
+#'                        = 1 when you want the missingness to only occur when 
+#'                        miss.bound.valary is a certain value
+#'                        = 0 when you don't want the missingness to occur 
+#'                        according to a miss.bound.value
 #' @param miss.bound.val  at what value do you want things to go missing?
-#' @param max_miss        what is the probability that things will go missing if
-#'                        miss.bound is on?
+#'                        e.g., from value 60 - make the missingness occur
+#' @param max_miss        what is the probability that things will go missing 
+#'                        if miss.bound is on?
 #' @param directory       where you want the file to be saved, e.g.,
 #'                        "~/Dropbox/ALL THE THINGS/PhD/MD_Paper_Prep/knitr/
 #'        2014_28_04_miss_data_sim/simulated_data/mcar"
 #' @param seed      set the random seed so that the results can be replicated.
 #' 
-#' @examples
+#' #examples
 #' 
 #' @return this function currently saves as an Rdataset.
-#' 
-#' 
-
+#'  
 gen.mar.dv.R <- function(data, 
                          R,
                          miss_prob, 
@@ -44,20 +49,21 @@ gen.mar.dv.R <- function(data,
   
   set.seed(seed)
   
-  ## find what number the string value of 'var' corresponds to
-  var <- which(names(sim1)==var)
+## find what number the string value of 'var' corresponds to
+  var <- which(names(sim1) == var)
   
-  ## start the 'R' repeat loop for making the dataset
+## start the 'R' repeat loop for making the dataset
   for (r in 1:R){ 
     
-    ## make a copy of the data
+  ## make a copy of the data
     newdata <- data
     
-    ## make the probability 0 if var <= miss_prob,
-    ## for each row for var, make the proability of missingness relative to
-    ## the maximum value of var, multiplied by miss_prob.
-    ## this means that the higher the value of var, the more likely it is to be missing.
-    
+  ## make the probability 0 if var <= miss_prob,
+  ## for each row for var, make the proability of missingness relative to
+  ## the maximum value of var, multiplied by miss_prob.
+  ## this means that the higher the value of var, the more likely it is to be 
+  ## missing.
+  
     for (i in (1:nrow(newdata))){
       
       newdata$prob[i] <- ( newdata[i,var] / max(newdata[var]) ) * miss_prob
@@ -65,8 +71,7 @@ gen.mar.dv.R <- function(data,
       ## make a random uniform for sim1
       newdata$runif <- runif(nrow(newdata), 
                              min = 0, 
-                             max = 1)
-      
+                             max = 1)      
     } ## close i-loop
     
     ## if the missing boundary setting is "on".
@@ -136,7 +141,7 @@ gen.mar.dv.R <- function(data,
     
     for(i in (1:nrow(newdata))){
       
-      newdata$miss_perc[i] <- sum(is.na(newdata[i,])) / ncol(newdata)
+      newdata$miss_perc[i] <- sum(is.na(newdata[i, ])) / ncol(newdata)
       
     } ## end of miss_perc loop
     
@@ -146,38 +151,20 @@ gen.mar.dv.R <- function(data,
     #- where namevar will change according to the variable inputted
     namevar <- names(newdata[var])
     
-    save(newdata,file = paste("mar.data",
-                              namevar,
-                              "missing",
-                              dv_miss_prob,
-                              "threshold",
-                              miss.bound.on,
-                              "p.miss",
-                              miss_prob,
-                              "seed",
-                              seed,
-                              ".RData", 
-                              sep="-")) 
-    
+    save(newdata,
+         file = paste("mar.data",
+                      namevar,
+                      "missing",
+                      dv_miss_prob,
+                      "threshold",
+                      miss.bound.on,
+                      "p.miss",
+                      miss_prob,
+                      "seed",
+                      seed,
+                      ".RData", 
+                      sep="-")) 
+
   } # close the 'R' loop
   
 }## close function loop
-
-###What do each of these variables in the function do?
-
-## data = which dataset you want to perform this on
-## R = the number of data sets you want to create
-## miss_prob = the amount to multiply the ratio of (current var value : max var)
-## var = whichever variable you want to cause the missingness
-## varlist = the list of variables in the dataset that will be affected by the missingness
-## mcar = 1 or 0 
-## 1 when you want the dependent variable to be MCAR
-## 0 when you want the dependent variable to be MNAR
-## dv_miss_prob (in -mcar- variable) = the % of missing data that you want the DV to be missing at    
-## miss.bound = 1 or 0.  
-## 1 when you want the missingness to only occur when miss.bound.valary is a certain value
-## 0 when you don't want the missingness to occur according to a miss.bound.valary
-
-## miss.bound.val (use in miss.bound) = the boundary that you want the value to start affecting the missingness - e.g., from value 60 - make the missingness occur
-
-## max_miss (use in miss.bound) = the % of data that you want missing when data exceeds miss.bound.val
