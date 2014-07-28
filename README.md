@@ -116,8 +116,4 @@ Bundle these functions together into a package, with an intuitive grammar for th
 - confirm possible missingness patterns 
 - create plots and diagnostics. 
 
-<<<<<<< HEAD
 These plots and diagnostics could utilie ggplot, ggvis, and shiny, so users can interactively explore their missing data.
-=======
-These plots and diagnostics could utilie ggplot, ggvis, and shiny, so users can interactively explore their missing data.
->>>>>>> FETCH_HEAD
