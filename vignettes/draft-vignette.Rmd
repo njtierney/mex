@@ -33,20 +33,11 @@ library(ggplot2)
 library(ggdendro)
 library(GGally)
 library(grid)
+library(gridExtra)
 library(mi)
 library(xtable)
 
-## add an if statement that installs the packages if they aren't there.
-```
-
-To run this code we need to make sure we have:
-
-- The [supplementary material (brt.functions) found in Appendix S3](http://onlinelibrary.wiley.com/doi/10.1111/j.1365-2656.2008.01390.x/suppinfo) from the Elith et. al(2008) article.
-
-For some reason in the code below I need to specify the full directory - even though this runs fine when I feed it into the console, it doesn't really work when I try to run a command like `simdat <- read.csv("sim.dat.csv")`.  So the code below specifies the rull directory.
-
-```{r }
-## load the MCAR.test function
+## load MCAR.test function
   source('~/Dropbox/ALL THE THINGS/PhD/code/R/mex/R/mcar_test.R')
 
 ## source code from elith et al.
@@ -56,16 +47,68 @@ For some reason in the code below I need to specify the full directory - even th
 ## C1 is higher than 55.
 sim.dat <- read.csv("~/Dropbox/ALL THE THINGS/PhD/code/R/mex/sim.dat.csv")
 
-## depict the missingness.
-missing.pattern.plot(sim.dat,
-                     gray.scale = TRUE,
-                     clustered = TRUE)
+## add an if statement that installs the packages if they aren't there.
 ```
 
-#### Data: 
+
+# mex: the **M**issingness **EX**plorer.
+
+
+Everything is still very much **in a draft phase**, and is in a state of **flux** - the things you see written here are not written in stone (more like a map drawn in the dirt with pointy sticks).
+
+## Why should someone use mex?
+If you have missing data, then you need to explore reasons for missing data. With mex, we aim to provide a model-assisted approach to elucidating missingness structure.  With mex, we also want to provide nice visualisations of the model output, and in the future incorporate the use of `shiny` and `ggvis` to enhance exploration. mex helps you do that by pulling together a variety of techniques, some new, some old, to make it easy and simple for a researcher to explore missing data. 
+
+## Main functions.
+The main functions in mex are:
+
+- explore
+- model
+- confirm
+
+### Explore
+In the explore step, you want to know how much missing data there is, and if there is a possibility of _bias_.  This exploration step utilises:
+- **visual plots** to show how much data there is missing, 
+- **t-test and $\chi^2$** to explore whether the mean of expected count is affected by missingness
+
+#### MCAR.test (aka, explore?)
+Before searching for structured missingness in the data, it is useful to ask whether the missingness is prevalent enough for us to need an investigation, and determine whether the data may be missing completely at random (MCAR)
+
+We can do this by:
+
+- splitting the data into two groups according to the presence or absence of a selected dependent variable, and
+- applying a t-test if the independent variables are continuous or
+- a chi-square test if they are discrete, 
+This allows us to determine the equality of means or category probabilities, respectively. A Bonferroni adjustment or similar method can be used to allow for multiple tests.
+
+I have written an R function `MCAR.test` which allows the user perform this test.  The function outputs a table giving the results of the t-test and the chi2 test.  This function still currently not working for the dataset `sim.dat.csv`, due to bugs.
+
+```{r mcar.test.chunk, eval=FALSE, include=FALSE, echo=TRUE}
+
+sim.dat$F1 <- as.factor(sim.dat$F1)
+
+sim.dat$F2 <- as.factor(sim.dat$F2)
+
+sim.dat.2 <- sim.dat[,-c(1,7:9)]
+
+head(sim.dat.2)
+
+factor.list <- c("F1",
+                 "F2")
+
+MCAR.test(data = sim.dat,
+          y = "C1",
+          factor.list = factor.list)
+
+```
+
+
+> For some reason in the code below I need to specify the full directory - even though this runs fine when I feed it into the console, it doesn't really work when I try to run a command like `simdat <- read.csv("sim.dat.csv")`.  So the code below specifies the rull directory.
+
+##### Datasets to use
 A simulated missing dataset was created to explore the missing data methods.  This dataset `sim.dat.csv` is in the Github repo. This dataset contained five variables, two categorical and three continuous, with 1,000 observations in each. The two categorical factors, F1 and F2, ranged uniformly across categories nominally labelled 1-7, and 1-10, respectively.  The three continuous variables, named C1, C2 and C3, were normally distributed with means and standard deviations of 50 and 10, 90 and 10, and 30 and 3, respectively.
 
-The code I wrote to create this data is below:
+The code I wrote to create this data is below, and is also in GitHub, under /demo/simulated_data.R :
 
 ```{r data.create, results='markup'}
 
@@ -127,52 +170,41 @@ str(sim1)
 
 ```
 
+I have written a function `sim_miss_data.R` to create missingness in data.  In our case, I have created missingness in the data `sim1`, and called it `sim.dat`.  However, the `sim_miss_data.R` function currently saves the data with the induced missingness into a directory.  One of the changes that I haven't gotten around to is changing the code so I can save it to an object or .csv, rather than to a directory, as it currently is.
 
-I have written a function (`sim_miss_data.R`) to create the missing data but it needs to be changed so that I can save it to an object.
-
-**R Datasets with missingness**
-
-- airquality
-- attenu
-
-```{r}
-missmap(airquality)
-
-missmap(attenu)
+```{r print.missplot}
+## depict the missingness.
+missing.pattern.plot(sim.dat,
+                     gray.scale = TRUE,
+                     clustered = TRUE)
 ```
 
-### MCAR.test
-Prior to identifying structure in the data, it is useful to ask whether there is sufficient missingness to warrant such an investigation - and to try and determine whether the data is missing completely at random (MCAR)
+**R Datasets with missingness** Only a few base R datasets seem to have missingness `airquality` and `attenu`, which can be seen below.
 
-This can be done by splitting the data into two groups according to the presence or absence of a selected dependent variable, and to apply a t-test if the independent variables are continuous or a chi-square test if they are discrete, in order to determine equality of the means or the category probabilities, respectively. 
+```{r miss.pattern.R.data}
+missing.pattern.plot(airquality, 
+                     gray.scale = TRUE,
+                     clustered = TRUE)
 
-A Bonferroni adjustment or similar method can be used to allow for multiple tests.
-
-I have written an R function `MCAR.test` which allows the user perform this test.  The function outputs a table giving the results of the t-test and the chi2 test. 
-
-This function still currently not working, which is something I'll need to explore.
-
-```{r mcar.test.chunk, eval=FALSE, include=FALSE, echo=TRUE}
-
-sim.dat$F1 <- as.factor(sim.dat$F1)
-
-sim.dat$F2 <- as.factor(sim.dat$F2)
-
-sim.dat.2 <- sim.dat[,-c(1,7:9)]
-
-head(sim.dat.2)
-
-factor.list <- c("F1",
-                 "F2")
-
-MCAR.test(data = sim.dat,
-          y = "C1",
-          factor.list = factor.list)
-
+missing.pattern.plot(attenu, 
+                     gray.scale = TRUE,
+                     clustered = TRUE)
 ```
 
-### CART model.
-We can then use CART models to predict the proportion of missing data in a row. For the CART model, I used the `rpart` and `rpart.plot` packages.
+so we are currently just using the `sim.dat` dataset.
+
+### Model
+In the model step, you model possible mechanisms for missingness, using the `rpart`, `gbm`, and (unsure of which precise clustering method to use) `hclust`.
+
+#### CART model.
+To assist us in detecting missingness structure, we use CART models to predict the proportion of missing data in a row. For the CART model, I used the `rpart` and `rpart.plot` packages.
+
+##### The process for running the CART model using rpart.
+- Predict `miss_perc`, the proportion of missing data in a row,  using the appropriate independent variables.
+- plot the data appropriately.
+- my common mistakes:
+    + make sure there aren't strings (or relabel as factors)
+    + make sure those variables that are supposed to be factors, are factors.
 
 ```{r cart.miss}
 
@@ -191,11 +223,35 @@ prp(cart.small,
 
 ```
 
-### The BRT
-For the BRT model, I use the `gbm` package, and the source code from elith et al.
+#### The BRT
+For the BRT model, I use the `gbm` package, and the source code from elith et al. (2008)  [found in supplementary file 2](http://onlinelibrary.wiley.com/doi/10.1111/j.1365-2656.2008.01390.x/suppinfo). 
+
+```
+I'm not sure if I can just upload this code to GitHub and then reference it - or if I should provide the link, so that they, the authors, can get the altmetrics from it?
+```
+
+Specifically, I used the functions:
+- `gbm.step`:
+> fits a gbm model to one or more response variables, using cross-validation to estimate the optimal number of trees.
+
+- `gbm.plot`:
+> Plots the partial dependence of the response on one or more predictors.
+
+There are a few other components that can be used from the elith et al (2008) supplementary materials - `gbm.fixed`, `gbm.holdout`, `gbm.simplify`, `gbm.plot.fits`, `gbm.interactions`, `gbm.perspec`, `gbm.predict.grids`. 
+
+A tricky part of fitting the BRT is understanding the right levels for each of the parameters:
+
+- `tree complexity`
+- `learning rate`
+- `bag fraction`
+
+And the `family` of distributions.
+
+I followed the examples out of the Elith et al guide (2008), which was fiddly.  It would be nice to make this model fitting process easier, perhaps this could be done using `ggvis`, to help control the parameters and get an update in real time.  It is also the case that the gbm.step function from Elith et al(2008) is slowing down everything.  I wonder if it would be possible to look at what they have done and re-write it to be faster.  It's annoying when each model takes 5 minutes+ to run, and you want to test 20 combinations of parameters.
+
+If we are to do any graphing, I would really like it if we made all of the output plots in ggplot.That is, if we are going to produce automated plots, we should use ggplot.  I'd also really like to fix the gbm.plot() code the Elith et al. have written.
 
 ```{r brt.example}
-
 brt.mod <- gbm.step(data=sim.dat, 
                     gbm.x = c(3:7), 
                     gbm.y = 11,
@@ -211,10 +267,73 @@ gbm.plot(brt.mod,
 
 ```
 
-### Other existing Methods
-Current solutions such `MissingDataGUI`, `VIM`, `missmap (in Amelia)`, `missing.pattern.plot (in mi)` usually focus on the user needing to visually search and find the trends. Whilst humans are very good at finding patterns, Having a model behind the output has more potential for really helping researchers explore their missing data problems in a precise way.  So whilst it is possible for people to use the methods provided in `mex`, it isn't necessarily easy, and straightforward.
+**note:** This vignette needs to change the gbm.plot code- as this code- that I have modified in 'gbm.plot' - for the window() command - that I changed to X11() - it now plots everything after that in the X11 device, which I don't want, as it is slow.
 
-`missmap` (from the `AMELIA II` package), which gives a visual depiction of the missingness in the dataset
+### Confirm
+In the confirm step, you can use the models created to predict the missingness structure of your own dataset, allowing for a degree of comparison or 'model fit'.
+
+One feature could be to plot the model fit of the proportion of missing data, and the predicted amount from the models.
+
+```{r cart.pred.plot}
+
+#obtain predicted values
+cart.pred <- predict(object = cart.small,
+                     newdata = sim.dat)
+
+gg.cart.pred.plot <- ggplot(data = NULL, 
+                         aes(x = sim.dat$miss_perc, 
+                             y = cart.pred)) + 
+                        geom_point(size = 2) + 
+                        labs(title = "",
+                             x = "CART Observed Values",
+                             y = "CART Predicted Values") + 
+                        theme(axis.text=element_text(size=10),
+                              axis.title=element_text(size=12))
+
+## print(gg.cart.pred.plot)
+
+```
+
+```{r brt.pre.plot}
+## obtain predictions
+  brt.pred <- predict.gbm(brt.mod, 
+                          n.trees= 600)
+
+## make a scatter plot of observed vs predicted
+
+gg.brt.pred.plot <- ggplot(data = sim.dat,
+                       aes(x = sim.dat$miss_perc, 
+                           brt.pred)) + 
+  geom_point(size = 2) + 
+  labs(title = "",
+       x = "BRT Observed Values",
+       y = "BRT Predicted Values") + 
+  theme(axis.text=element_text(size=10),
+        axis.title=element_text(size=12))
+
+## print(gg.brt.pred.plot)
+
+```
+
+```{r print.cart.brt.plots}
+
+## gridExtra allows for easy combining of ggplots...
+  
+grid.arrange(gg.cart.pred.plot,
+             gg.brt.pred.plot, 
+             ncol=2)
+
+```
+
+## How does `mex` compare to other existing solutions?
+Current solutions such `MissingDataGUI`, `VIM`, `missmap (in Amelia)`, `missing.pattern.plot (in mi)` usually focus on the user needing to visually search and find the trends. Whilst humans are very good at finding patterns, having a model behind the output has more potential for really helping researchers explore their missing data problems in a precise way.  So whilst it is possible for people to use the methods provided in `mex`, it isn't necessarily easy, and straightforward
+
+### `MissingDataGUI`
+
+### `VIM`
+
+### `missmap` (from the `AMELIA II` package)
+gives a visual depiction of the missingness in the dataset
 
 ```{r missmap}
 
@@ -222,7 +341,8 @@ missmap(sim.dat,
         rank.order = FALSE)
 ```
 
-`missing.pattern.plot` is another missingness map tool that exists from the `im` package - this allows you to specify a "clustered" option, which groups data with similar missingness patterns together.
+### `missing.pattern.plot` 
+Another missingness map tool that exists from the `im` package - this allows you to specify a "clustered" option, which groups data with similar missingness patterns together.
 
 ```{r im.map}
 
@@ -231,24 +351,16 @@ missing.pattern.plot(sim.dat,
 
 ```
 
-`MissingDataGUI`
-
-`VIM`
-
-### Other Work?
-Damjan has kindly pointed that the CART and BRT models may neglect useful information in the data's correlation structure.  An approach is to then apply hierarchical clustering to a dataset and then apply the CART or BRT on the dataset, predicting membership in a particular cluster.
+## Future Work
+Damjan has made a great point, that the CART and BRT models may neglect useful information from the data's correlation structure.  An approach is to use hierarchical clustering on a binary (present/absent) dataset, and then apply the CART or BRT to predict membership in a particular cluster, using the values of the dataset.
 
 So the code might look something like this.
 
-#### Note:
-This vignette needs to change the gbm.plot code- as this code- that I have modified in 'gbm.plot' - for the window() command - that I changed to X11() - it now plots everything after that in the X11 device, which I don't want, as it is slow.
-
+First run the hierarhical clustering, using `hclust()`
 ```{r hclust.run}
 
 ## run the clustering on a dataset made of the 
 hclust.fit <- hclust(dist(is.na.data.frame(sim.dat)))
-
-require(ggdendro)
 
 ## plot the hclust
 plot(hclust.fit)
@@ -260,14 +372,19 @@ c.id <- as.factor(cutree(hclust.fit, 4))
 sim.clust <- data.frame(sim.dat, 
                         c.id)
 
-names(sim.clust)
+```
 
+Now let's look at the percent of missing data in each cluster
+```{r ggplot.hclust}
+## plot it on ggplot, this is the percent of missing data in each cluster
 ggplot(data = sim.clust,
        aes(x = c.id,
            y = miss_perc)) + 
   geom_point()
+```
 
-head(sim.clust)
+Now let's use the rpart method.
+```{r hclust.rpart}
 
 ## get the CART model to predict membership in each cluster.
 rpart.clust <- rpart(c.id ~ C1 + C2 + C3 + F1 + F2,
@@ -280,111 +397,31 @@ prp(rpart.clust,
     type = 4, 
     prefix = "Clust ID = ")
 
-```
-
-The following code here makes a **nicer** looking dendro plot, but the code to do so is kinda complicated. 
-```{r stack.ovflw.ggdendro}
-
-data(mtcars)
-
-x <- as.matrix(scale(mtcars))
-
-dd.col <- as.dendrogram(hclust(dist(x)))
-
-col.ord <- order.dendrogram(dd.col)
-
-dd.row <- as.dendrogram(hclust(dist(t(x))))
-
-row.ord <- order.dendrogram(dd.row)
-
-xx <- scale(mtcars)[col.ord, row.ord]
-
-xx_names <- attr(xx, "dimnames")
-
-df <- as.data.frame(xx)
-
-colnames(df) <- xx_names[[2]]
-
-df$car <- xx_names[[1]]
-
-df$car <- with(df, 
-               factor(car, 
-                      levels = car, 
-                      ordered=TRUE))
-
-mdf <- melt(df, 
-            id.vars="car")
-
-## extract dendrogram data and create plots
-
-ddata_x <- dendro_data(dd.row)
-
-ddata_y <- dendro_data(dd.col)
-
-### Set up a blank theme
-theme_none <- theme(
-  panel.grid.major = element_blank(),
-  panel.grid.minor = element_blank(),
-  panel.background = element_blank(),
-  axis.title.x = element_text(colour=NA),
-  axis.title.y = element_blank(),
-  axis.text.x = element_blank(),
-  axis.text.y = element_blank(),
-  axis.line = element_blank()
-  #axis.ticks.length = element_blank()
-)
-
-### Create plot components ###    
-# Heatmap
-p1 <- ggplot(mdf, 
-             aes(x = variable, 
-                 y = car)) + 
-  geom_tile(aes(fill = value)) +
-  scale_fill_gradient2()
-
-# Dendrogram 1
-p2 <- ggplot(segment(ddata_x)) + 
-  geom_segment(aes(x = x, 
-                   y = y, 
-                   xend = xend, 
-                   yend = yend)) + 
-  theme_none + 
-  theme(axis.title.x = element_blank())
-
-# Dendrogram 2
-p3 <- ggplot(segment(ddata_y)) + 
-  geom_segment(aes(x = x, 
-                   y = y, 
-                   xend = xend, 
-                   yend = yend)) + 
-  coord_flip() +
-  theme_none
-
-## Use grid graphics and some manual alignment to position the three plots on the page
-
-### Draw graphic ###
-
-grid.newpage()
-print(p1, vp=viewport(0.8, 
-                      0.8, 
-                      x = 0.4, 
-                      y = 0.4))
-
-print(p2, 
-      vp = viewport(0.52, 
-                    0.2, 
-                    x = 0.45, 
-                    y = 0.9))
-
-print(p3, 
-      vp = viewport(0.2, 
-                    0.8, 
-                    x = 0.9, 
-                    y = 0.4))
 
 ```
 
-## My Hopes?
-That we can bundle all of these functions together into a package that generates some nifty plots and diagnostics for the user.  But what I think would make this really nifty would be to create plots in ggplot format and even better, to generate plots in ggvis format, so that other users can explore their missing data in an interactive way.   I think that a really nice goal that could come out of our work, which would have to be in the later stages, once everything is working, would be to make it easier for researchers to produce publication-quality visualisations from using our package.  For example, making a nicer dendrogram plot, or to make a nicer
+Now let's use the brt method (currently not working!)
+```{r hclust.brt, eval=FALSE}
+brt.clust <- gbm.step(data=sim.clust,
+                    gbm.x = c(3:7), 
+                    gbm.y = 12,
+                    family = "gaussian",
+                    tree.complexity = 2,
+                    learning.rate = 0.01,
+                    bag.fraction = 0.5)
 
+gbm.plot(brt.clust, 
+         n.plots = 5, 
+         write.title=F,
+         plot.layout = c(2,3))
+```
 
+## Future Goals.
+Bundle these functions together into a package, with an intuitive grammar for the functions, making it easy for users to:
+
+- explore their missing data
+- model their missing data 
+- confirm possible missingness patterns 
+- create plots and diagnostics. 
+
+These plots and diagnostics could utilie ggplot, ggvis, and shiny, so users can interactively explore their missing data.
