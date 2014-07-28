@@ -27,7 +27,7 @@ In the model step, you model the expected mechanisms for missingness, using the 
 In the confirm step, you can use the models created to predict the missingness structure of your own dataset, allowing for a degree of comparison or 'model fit'.
 
 ### How does it compare to other existing solutions?
-Current solutions `(such as...)` usually focus on the user needing to visually search and find the trends. Whilst humans are very good at finding patterns, Having a model behind the output has more potential for really helping researchers explore their missing data problems in a precise way.  So whilst it is possible for people to use the methods provided in `mex`, it isn't necessarily easy, and straightforward.
+Current solutions such `MissingDataGUI`, `VIM`, `missmap (in Amelia)`, `missing.pattern.plot (in mi)` usually focus on the user needing to visually search and find the trends. Whilst humans are very good at finding patterns, Having a model behind the output has more potential for really helping researchers explore their missing data problems in a precise way.  So whilst it is possible for people to use the methods provided in `mex`, it isn't necessarily easy, and straightforward.
 
 
 
