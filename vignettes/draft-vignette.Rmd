@@ -50,9 +50,7 @@ sim.dat <- read.csv("~/Dropbox/ALL THE THINGS/PhD/code/R/mex/sim.dat.csv")
 ## add an if statement that installs the packages if they aren't there.
 ```
 
-
 # mex: the **M**issingness **EX**plorer.
-
 
 Everything is still very much **in a draft phase**, and is in a state of **flux** - the things you see written here are not written in stone (more like a map drawn in the dirt with pointy sticks).
 
@@ -108,67 +106,7 @@ MCAR.test(data = sim.dat,
 ##### Datasets to use
 A simulated missing dataset was created to explore the missing data methods.  This dataset `sim.dat.csv` is in the Github repo. This dataset contained five variables, two categorical and three continuous, with 1,000 observations in each. The two categorical factors, F1 and F2, ranged uniformly across categories nominally labelled 1-7, and 1-10, respectively.  The three continuous variables, named C1, C2 and C3, were normally distributed with means and standard deviations of 50 and 10, 90 and 10, and 30 and 3, respectively.
 
-The code I wrote to create this data is below, and is also in GitHub, under /demo/simulated_data.R :
-
-```{r data.create, results='markup'}
-
-## make an id that goes from 1 thru to 1000, in increments of 1.
-  ID <- seq(from = 1,
-            to = 1000,
-            by = 1)
-
-# Now generate the variables.  There will be 3 continuous variables, and two factors.
-
-## generate 3 missing continuous variables, C1..C3
-  C1 <- rnorm(n = 1000, 
-              mean = 50, 
-              sd = 10)
-
-#similar to FEV1% data
-  C2 <- rnorm(n = 1000, 
-              mean = 90, 
-              sd = 10)
-
-#similar to BMI data
-  C3 <- rnorm(n = 1000, 
-              mean = 30, 
-              sd = 3)
-
-## generate two factors.
-
-## factor 1 - values between 1 and 7
-## repeat 1...7, 1000 times)
-  F1 <- rep(1:7, 
-            length.out = 1000)
-
-## make F1 a randomly ordered version of F1
-  F1 <- sample(F1)
-
-## factor 2 - values between 1 and 10
-  F2 <- rep(x = 1:10, 
-            times = 100)
-
-## make F2 a randomly ordered version of F2
-  F2 <- sample(F2)
-
-## Collate variables: ID, C1...C3, F1, F2 into a dataframe, using data.frame
-sim1 <- data.frame(ID, 
-                   C1, 
-                   C2, 
-                   C3, 
-                   F1, 
-                   F2)
-  
-## double check the data
-head(sim1)
-
-dim(sim1)
-
-class(sim1)
-
-str(sim1)
-
-```
+The code I wrote to create this data is in GitHub, under /demo/simulated_data.R :
 
 I have written a function `sim_miss_data.R` to create missingness in data.  In our case, I have created missingness in the data `sim1`, and called it `sim.dat`.  However, the `sim_miss_data.R` function currently saves the data with the induced missingness into a directory.  One of the changes that I haven't gotten around to is changing the code so I can save it to an object or .csv, rather than to a directory, as it currently is.
 
