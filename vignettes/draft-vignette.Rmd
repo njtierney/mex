@@ -36,8 +36,9 @@ library(grid)
 library(gridExtra)
 library(mi)
 library(xtable)
+library(mice)
 
-## load MCAR.test function
+data## load MCAR.test function
   source('~/Dropbox/ALL THE THINGS/PhD/code/R/mex/R/mcar_test.R')
 
 ## source code from elith et al.
@@ -55,9 +56,12 @@ sim.dat <- read.csv("~/Dropbox/ALL THE THINGS/PhD/code/R/mex/sim.dat.csv")
 Everything is still very much **in a draft phase**, and is in a state of **flux** - the things you see written here are not written in stone (more like a map drawn in the dirt with pointy sticks).
 
 ## Why should someone use mex?
-If you have missing data, then you need to explore reasons for missing data. With mex, we aim to provide a model-assisted approach to elucidating missingness structure.  With mex, we also want to provide nice visualisations of the model output, and in the future incorporate the use of `shiny` and `ggvis` to enhance exploration. mex helps you do that by pulling together a variety of techniques, some new, some old, to make it easy and simple for a researcher to explore missing data. 
+If you have missing data, then you need to explore reasons for missingness. With mex, we aim to provide:
 
-## Main functions.
+- a simple model-assisted approach to elucidating missingness structure. 
+- nice visualisations of model output, incorporating the use of `shiny` and `ggvis` to enhance exploration. 
+
+## Functions.
 The main functions in mex are:
 
 - explore
@@ -66,6 +70,7 @@ The main functions in mex are:
 
 ### Explore
 In the explore step, you want to know how much missing data there is, and if there is a possibility of _bias_.  This exploration step utilises:
+
 - **visual plots** to show how much data there is missing, 
 - **t-test and $\chi^2$** to explore whether the mean of expected count is affected by missingness
 
@@ -119,6 +124,12 @@ missing.pattern.plot(sim.dat,
 
 **R Datasets with missingness** Only a few base R datasets seem to have missingness `airquality` and `attenu`, which can be seen below.
 
+Other datasets come from the `mice` package:
+
+- boys
+- fdd
+
+
 ```{r miss.pattern.R.data}
 missing.pattern.plot(airquality, 
                      gray.scale = TRUE,
@@ -127,6 +138,16 @@ missing.pattern.plot(airquality,
 missing.pattern.plot(attenu, 
                      gray.scale = TRUE,
                      clustered = TRUE)
+
+missing.pattern.plot(boys, 
+                     gray.scale = TRUE,
+                     clustered = TRUE)
+
+missing.pattern.plot(fdd, 
+                     gray.scale = TRUE,
+                     clustered = TRUE)
+
+
 ```
 
 so we are currently just using the `sim.dat` dataset.
