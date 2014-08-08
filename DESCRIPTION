@@ -4,7 +4,7 @@ Version: 0.1
 Authors@R: c(person("Nicholas", "Tierney", role = c("aut", "cre"),
     email = "nicholas.tierney@gmail.com"),
     person("Damjan", "Vukcevic", role = c("aut", "cre"),
-    email = "damjan.vukcevic@mcri.edu.au")
+    email = "damjan.vukcevic@mcri.edu.au"))
 Author: Nicholas Tierney and Damjan Vukcevic
 Maintainer: Nicholas Tierney <nicholas.tierney@gmail.com> and
     Damjan Vukcevic <damjan.vukcevic@mcri.edu.au>
@@ -22,7 +22,6 @@ Depends:
 License: MIT
 LazyData: true
 Imports:
-    
 URL: NA
 Suggests:
     NA
