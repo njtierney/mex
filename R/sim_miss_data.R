@@ -1,15 +1,12 @@
 #' @title sim_miss_data
-#'
 #' @description
 #' \code{sim_miss_data} generates a dataframe with a specified missingness
 #' pattern.
-#'
 #' @details
 #' This function gives the user a great deal of control over creating different
 #' patterns of missingness, however it was created with a specific purpose in 
 #' mind, and so it might actually need to be broken up into a couple of 
 #' different functions, as it is quite a large function.
-#' 
 #' @param data      dataset you want to inflict the missingness on
 #' @param R         Number of datasets you want.
 #' @param miss.perc percent of missing data you want (approximately)
@@ -30,11 +27,10 @@
 #'                        "~/Dropbox/ALL THE THINGS/PhD/MD_Paper_Prep/knitr/
 #'        2014_28_04_miss_data_sim/simulated_data/mcar"
 #' @param seed      set the random seed so that the results can be replicated.
-#' 
 #' #examples
-#' 
 #' @return this function currently saves as an Rdataset.
-#'  
+#' @export
+
 gen.mar.dv.R <- function(data, 
                          R,
                          miss_prob, 
