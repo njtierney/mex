@@ -37,7 +37,6 @@ if miss.bound is on?}
 2014_28_04_miss_data_sim/simulated_data/mcar"}
 
 \item{seed}{set the random seed so that the results can be replicated.
-
 #examples}
 }
 \value{
