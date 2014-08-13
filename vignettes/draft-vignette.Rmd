@@ -37,18 +37,25 @@ library(gridExtra)
 library(mi)
 library(xtable)
 library(mice)
+library(devtools)
 
-data## load MCAR.test function
+## load MCAR.test function
   source('~/Dropbox/ALL THE THINGS/PhD/code/R/mex/R/mcar_test.R')
 
 ## source code from elith et al.
   source("~/Dropbox/ALL THE THINGS/PhD/Guides/Elith_BRT_Guide_2_of_2/brt.functions.R")
 
+## start dev mode
+dev_mode()
+
+## launch mex
+library("mex", lib.loc="~/R-dev")
+
+
 ## this dataset has random missingness as well as missingness induced when the variable
 ## C1 is higher than 55.
-sim.dat <- read.csv("~/Dropbox/ALL THE THINGS/PhD/code/R/mex/sim.dat.csv")
+data(sim.dat)
 
-## add an if statement that installs the packages if they aren't there.
 ```
 
 # mex: the **M**issingness **EX**plorer.
@@ -212,8 +219,8 @@ If we are to do any graphing, I would really like it if we made all of the outpu
 
 ```{r brt.example}
 brt.mod <- gbm.step(data=sim.dat, 
-                    gbm.x = c(3:7), 
-                    gbm.y = 11,
+                    gbm.x = c(2:6), 
+                    gbm.y = 10,
                     family = "gaussian",
                     tree.complexity = 2,
                     learning.rate = 0.01,
