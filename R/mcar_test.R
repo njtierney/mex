@@ -28,7 +28,7 @@
 #' @section Warning: Check whether Little used this test first.
 #' @export
 
-MCAR.test <- function(data, 
+mcar_test <- function(data, 
                       y, 
                       factor.list){
 
