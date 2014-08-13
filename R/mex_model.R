@@ -16,6 +16,7 @@
 #' @export
 
 mex_model <- function (data) {
+  
   ## run the clustering on a dataset made of the 
   hclust.fit <- hclust(dist(is.na.data.frame(data)))
     
@@ -25,17 +26,45 @@ mex_model <- function (data) {
   ## add the 4 pieces into a dataframe
   sim.clust <- data.frame(data, 
                           c.id)
+  ##
+  ### The rpart section
+  ##
   
-  list(mex.clust = sim.clust)
+  ## load the rpart library
+  library(rpart)
+  
+  mex.cart <- rpart(c.id ~ C1 + C2 + C3 + F1 + F2,
+                      data = sim.clust,
+                      na.action = na.rpart, 
+                      method = "class")
+  
+  #load the rpart plotting library
+  library(rpart.plot)
+  
+  ## plot the rpart tree - currently doesn't allow us to plot it ourselves
+  mex.cart.plot <- prp(cart.small, 
+                        extra = 1, 
+                        type = 4, 
+                        prefix = "Prop. Miss = ")
+  
+  ##
+  ### What is included in the output of the function?
+  ##
+
+  # list of the commands returned from the function
+  list(mex.clust = sim.clust,
+       mex.cart = mex.cart,
+       mex.cart.plot = mex.cart.plot)
 }
 
 ## Future development include:
 ## - adding in:
-  ## rpart modelling
-  ## BRT modelling
+  ## rpart modelling (cannot get the plots to work)
+  ## BRT modelling ()
   ## Plotting:
     ## e.g., type -plot("name of fitted mex object")- and then scroll through
     ## different hclust, CART, and BRT plots in the R viewer.
+  ## Adding testing to the code, so that I can work on making my code better.
 
 
 
