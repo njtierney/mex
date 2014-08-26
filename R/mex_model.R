@@ -46,6 +46,10 @@ mex_model <- function (data) {
                         extra = 1, 
                         type = 4, 
                         prefix = "Prop. Miss = ")
+
+  #
+  
+  
   
   ##
   ### What is included in the output of the function?
@@ -66,6 +70,6 @@ mex_model <- function (data) {
     ## different hclust, CART, and BRT plots in the R viewer.
   ## Adding testing to the code, so that I can work on making my code better.
 
-
-
-
+## What sort of tests do I need to run on this package?
+  ## does it return 3 things?
+  ## is 
