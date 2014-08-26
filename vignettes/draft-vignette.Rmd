@@ -1,16 +1,8 @@
----
-title: "Understanding Missing Data"
-author: "Nick Tierney"
-date: "11 July 2014"
-output:
-  html_document:
-    highlight: haddock
-    theme: readable
-    toc: yes
-  pdf_document:
-    toc: yes
-  word_document: default
----
+
++<!--
++%\VignetteEngine{knitr}
++%\VignetteIndexEntry{mex: (m)issingness (ex)plorer}
++-->
 
 ```{r global_options, include=FALSE}
 library(knitr)
@@ -135,7 +127,6 @@ Other datasets come from the `mice` package:
 
 - boys
 - fdd
-
 
 ```{r miss.pattern.R.data}
 missing.pattern.plot(airquality, 
