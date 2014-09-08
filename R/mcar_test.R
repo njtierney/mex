@@ -3,15 +3,15 @@
 #' \code{mcar_test} evaluates differences in expected mean or count according
 #'  to a specified missing/non missing variable
 #' @details
-#' Prior to identifying structure in the data, it is useful to ask whether 
-#' there is sufficient missingness to warrant such an investigation - and to 
-#' try and determine whether the data is missing completely at random (MCAR).
-#' This can be done by splitting the data into two groups according to the 
-#' presence or absence of a selected dependent variable, and to apply a t-test
-#' if the independent variables are continuous or a chi-square test if they are
+#' Prior to identifying structure in the data, it is useful to ask whether there
+#' is sufficient missingness to warrant such an investigation - and to try and 
+#' determine whether the data is missing completely at random (MCAR). This can 
+#' be done by splitting the data into two groups according to the presence or 
+#' absence of a selected dependent variable, and to apply a t-test if the 
+#' independent variables are continuous or a chi-square test if they are 
 #' discrete, in order to determine equality of the means or the category 
-#' probabilities, respectively. A Bonferroni adjustment (or similar) method can
-#' be used to allow for multiple tests. This mcar_test is based off of the test
+#' probabilities, respectively. A Bonferroni adjustment (or similar) method can 
+#' be used to allow for multiple tests. This mcar_test is based off of the test 
 #' for whether data is completely missing at random, from Little(1988)
 #' @param data         Dataset you are using.
 #' @param y            The variable that you want to split the dataset into two
@@ -60,8 +60,8 @@ mcar_test <- function(data,
   data.t.test <- data[ , !(colnames(data) %in% factor.list)]
 
 ## This function has two parts
-  ## t-test part
   ## chi-squared part.
+  ## t-test part
 
 ############################
 ##### The Chi-Squared Part
@@ -69,7 +69,7 @@ mcar_test <- function(data,
 
 ## General Idea:
   ## Make a loop passing through each variable
-      ## Make a contingency table according to +/- of 'yvar'. 
+      ## Make a contingency table according to pres/abs of the given y. 
       ## Store this table
       ## Conduct a chi2 test on the table,
           ## pull relevant info out, 
@@ -82,28 +82,22 @@ mcar_test <- function(data,
 ## r-tutor.com/elementary-statistics/goodness-fit/chi-squared-test-independence
 
 ## how many columns are there in this dataset?
-
   chi.ncol <- ncol(data.chisq.test)
 
 ## store the names of dataset to variable 'names'
-
   names.chi <- names(data.chisq.test)
 
 ## create 'container' for p-values to be placed.
-
-  chi.p.value <- rep(0,chi.ncol)
+  chi.p.value <- rep(0, chi.ncol)
 
 ## create container for variables used in the dataframe at end of the script.
-
-  chi.variable <- rep(0,chi.ncol)
+  chi.variable <- rep(0, chi.ncol)
 
 ## create container to store the results from the chisq.test
-
   chi.results.list <- vector("list", chi.ncol)
-
   chi.ctable.list <- vector("list", chi.ncol)
 
-## This loop goes through the variable, t, which loops through 1 - #col
+## This loop goes through the variable, t, which loops through 1 - ncol
   for (t in 1:chi.ncol){ 
       ## start of loop.
       
@@ -136,46 +130,38 @@ mcar_test <- function(data,
   chi.output <- data.frame(variable = chi.variable,
                            p.value = chi.p.value)
 
-##########################
-#### The T-Test Part
-##########################
+#=================
+# The T-Test Part
+#=================
   
   ## store the numbers of columns in the data set.  
-  
     C <- ncol(data.t.test)
   
   ## attach the names of dataset to variable 'names'
-  
     names <- names(data.t.test)
   
   ## create 'container' for p-values to be placed.
-  
     pvalue <- rep(0, C)
   
-  ## The 'container' for the population overall to be placed##
-  
+  ## The 'container' for the population overall to be placed
     n <- rep(0, C)
   
   ## Population for the X_VARIABLE when the Y-VARIABLE is present.
-  
     n_x_var_y_pres <- rep(0, C)
   
   ## Population for the X_VARIABLE when the Y-VARIABLE is absent.
-  
     n_x_var_y_abs<-rep(0, C)
   
   ## Create container for 'variable', used in dataframe at the end of script.
-  
     variable<-rep(0, C)
   
   ## These means are the 'containers' for the mean values of the x_variables
-
-  mean_x_var_y_pres<-rep(0, C)
-  mean_x_var_y_abs<-rep(0, C)
+    mean_x_var_y_pres<-rep(0, C)
+    mean_x_var_y_abs<-rep(0, C)
   
   ## A loop, going through the variable t, which loops through 1 - C.
   
-  for (t in 1:C){
+  for (t in 1:C) {
     ## start of loop.
     
     ## all obs in a variable where -y- is present (data may be missing)
@@ -183,7 +169,7 @@ mcar_test <- function(data,
       ## when the cell == 0, it means the data is NOT NA, 
       ## meaning that it is PRESENT
     
-    x_var_y_present <- data.t.test[data.X[ ,yvar] == 0, t]
+    x_var_y_present <- data.t.test[data.X[ , yvar] == 0, t]
     
     ## the mean value of the x_variable when y is present.
     mean_x_var_y_pres[t] <- mean(x_var_y_present, 
@@ -191,9 +177,9 @@ mcar_test <- function(data,
     
     ## all observations in a variable where -y- is absent (data may be missing)
     ## IMPORTANT
-      ## when the cell == 1, it means the data IS NA, meaning that it is ABSENT  
+      ## when the cell == 1, it means the data IS NA, meaning that it is ABSENT 
     
-    x_var_y_absent <- data.t.test[data.X[ ,yvar] == 1, t]
+    x_var_y_absent <- data.t.test[data.X[ , yvar] == 1, t]
     
     ## The mean value of the x_variable when y is absent.
     mean_x_var_y_abs[t] <- mean(x_var_y_absent,
@@ -226,27 +212,15 @@ if (length(na.omit(x_var_y_absent)) > 10 &
       ## stores pvalue of t-th variable 
         pvalue[t] <- tmp$p.value
       
-      ## mp takes upon the mean value of the x_variable when y is present.
-          # mean_x_var_y_pres[t] -> mp
-      ## this was "mean_y-var_pres[t]", the reason being that it was read as:
-      ## "The mean value of x when y is present."
-      
-      ## Number of observations for:
-        ## cases within a particular variable when y is PRESENT, 
-        ## which are not missing.
-      
+      ## #obs for cases within a given variable when y is PRESENT, 
+      ## which are not missing.
         n_x_var_y_pres[t] <- length(which(is.na(x_var_y_present) == 0))
-      
-      ## ma takes the mean value of the x_variable when y is absent.
-      ## mean_x_var_y_abs[t] -> ma 
-      
-      ## Number of observations for:
-        ## cases within a particular variable when y is ABSENT,
-        ## which are not missing.
-      
+
+      ## #obs for cases within a particular variable when y is ABSENT, 
+      ## which are not missing.
         n_x_var_y_abs[t] <- length(which(is.na(x_var_y_absent) == 0))
       
-      ## Total number of observations NOT missing for that variable
+      ## Total # obs NOT missing for that variable
       n[t] <- length(which(is.na(x_var_y_present) == 0)) +
               length(which(is.na(x_var_y_absent) == 0))
       
@@ -254,33 +228,27 @@ if (length(na.omit(x_var_y_absent)) > 10 &
     ## closing the if statement
     
     ## else,
-      ##if there aren't enough observations, we omit them from the t-test, 
-        ## giving their p-value 99
+    ## if there aren't enough obs, omit from t-test, giving a p-value = 99
     
     else {pvalue[t] <- 99 
           
           ## then record the rest of the details about that variable.
           
-          ## mp takes upon the mean value of the x_variable when y is present.
-          mp <- mean_x_var_y_pres[t] 
+          ## mp = mean value of the x_variable when y is present.
+            mp <- mean_x_var_y_pres[t] 
           
-          ## this was "mean_y-var_pres[t]", as it was read as:
-            ## "The mean value of x when y is present."
-          
-          ## this is the number of observations for:
-            ## cases within a particular variable when y is present,
-            ## which are not missing.
-          n_x_var_y_pres[t] <- length(which(is.na(x_var_y_present) == 0))
+          ## this is the #obs for cases within a particular variable when y is
+          ## present, which are not missing.
+            n_x_var_y_pres[t] <- length(which(is.na(x_var_y_present) == 0))
           
           ## mp takes upon the mean value of the x_variable when y is present.
             ma <- mean_x_var_y_abs[t] 
           
-          ## this is the number of observations for:
-          ## cases within a particular variable when y is ABSENT,
-          ## which are not missing.
+          ## this is the #obs for cases within a particular variable when y
+          ## is ABSENT, which are not missing.
           n_x_var_y_abs[t] <- length(which(is.na(x_var_y_absent) == 0))
           
-          ## total number of obs that are not missing for that variable  
+          ## total #obs not missing for that variable  
           n[t] <- length(which(is.na(x_var_y_present) == 0)) +
                   length(which(is.na(x_var_y_absent) == 0)) 
     } ## closing the else statement
@@ -290,11 +258,9 @@ if (length(na.omit(x_var_y_absent)) > 10 &
   
   } ## closing the t- for-loop.
   
-  ## round the values so that it isn't super long
+  ## round values so it isn't super long
   pvalue <- round(pvalue, 4)
-
   mean_x_var_y_pres <- round(mean_x_var_y_pres, 4)
-
   mean_x_var_y_abs <- round(mean_x_var_y_abs, 4)
   
   ## 'finaloutput' becomes a dataframe with the rows of the variable name, 
