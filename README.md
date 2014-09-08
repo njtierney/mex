@@ -1,6 +1,6 @@
-# mex: the **M**issingness **EX**plorer.
+# mex: the (m)issingness (ex)plorer.
 
-Everything is still very much **in a draft phase**, and is in a state of **flux** - the things you see written here are not written in stone (more like a map drawn in the dirt with pointy sticks).
+Everything is still very much **in a draft phase**, and is in a state of **flux** - the things you see written here are not written in stone.
 
 ## Why should someone use mex?
 If you have missing data, then you need to explore reasons for missing data. With mex, we aim to provide a model-assisted approach to elucidating missingness structure.  With mex, we also want to provide nice visualisations of the model output, and in the future incorporate the use of `shiny` and `ggvis` to enhance exploration. mex helps you do that by pulling together a variety of techniques, some new, some old, to make it easy and simple for a researcher to explore missing data. 
