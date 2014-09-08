@@ -13,19 +13,25 @@
 #' probabilities, respectively. A Bonferroni adjustment (or similar) method can 
 #' be used to allow for multiple tests. This mcar_test is based off of the test 
 #' for whether data is completely missing at random, from Little(1988)
+#' 
 #' @param data         Dataset you are using.
+#' 
 #' @param y            The variable that you want to split the dataset into two
 #'                     parts dependent upon the missingness.
+#' 
 #' @param factor.list  Those variables that are factors. 
+#' 
 #' @format Gives 4 dataframes: 
 #'         mcar.t.test.table - the results from the t-test  
 #'         mcar.chi2.table
 #'         mcar.chi2.results - the results from the chi2 test
 #'         mcar.chi2.ctab  - the contingency table
+#' 
 #' @section Thankyous: Special thanks to Dr. Nicole White for her help writing
 #'                     the initial code in early 2013
+#' 
 #' @section Warning: the data must contain only numerical values - No strings!
-#' @section Warning: Check whether Little used this test first.
+#' 
 #' @export
 
 mcar_test <- function(data, 
