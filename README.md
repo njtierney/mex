@@ -8,17 +8,17 @@ If you have missing data, then you need to explore reasons for missing data. Wit
 ## Main functions.
 The main functions in mex are:
 
-- explore
-- model
-- confirm
+- `explore`
+- `model`
+- `confirm`
 
 ### Explore
 In the explore step, you want to know how much missing data there is, and if there is a possibility of _bias_.  This exploration step utilises:
 - **visual plots** to show how much data there is missing, 
 - **t-test and $\chi^2$** to explore whether the mean of expected count is affected by missingness
 
-#### MCAR.test (aka, explore?)
-Before searching for structured missingness in the data, it is useful to ask whether the missingness is prevalent enough for us to need an investigation, and determine whether the data may be missing completely at random (MCAR)
+#### mcar_test (part of `explore`)
+Before searching for structured missingness in the data, it is useful to ask whether the missingness is prevalent enough for us to need an investigation, and determine whether the data may be missing completely at random (MCAR).
 
 We can do this by:
 
