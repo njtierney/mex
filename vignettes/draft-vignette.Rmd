@@ -50,7 +50,7 @@ data(sim.dat)
 
 ```
 
-# mex: the **M**issingness **EX**plorer.
+# mex: the (m)issingness (ex)plorer.
 
 Everything is still very much **in a draft phase**, and is in a state of **flux** - the things you see written here are not written in stone (more like a map drawn in the dirt with pointy sticks).
 

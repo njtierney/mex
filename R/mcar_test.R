@@ -17,9 +17,11 @@
 #' @param data         Dataset you are using.
 #' 
 #' @param y            The variable that you want to split the dataset into two
-#'                     parts dependent upon the missingness.
+#'                     parts dependent upon the missingness. This must be in 
+#'                     quotes. E.g., "C1"
 #' 
-#' @param factor.list  Those variables that are factors. 
+#' @param factor.list  Those variables that are factors. Must be in quotes.
+#'                     E.g., c("F1", "F2")
 #' 
 #' @format Gives 4 dataframes: 
 #'         mcar.t.test.table - the results from the t-test  

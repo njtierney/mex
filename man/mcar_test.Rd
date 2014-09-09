@@ -14,21 +14,23 @@ mcar_test(data, y, factor.list)
 \item{data}{Dataset you are using.}
 
 \item{y}{The variable that you want to split the dataset into two
-parts dependent upon the missingness.}
+                    parts dependent upon the missingness. This must be in
+                    quotes. E.g., "C1"}
 
-\item{factor.list}{Those variables that are factors.}
+\item{factor.list}{Those variables that are factors. Must be in quotes.
+                    E.g., c("F1", "F2")}
 }
 \description{
 \code{mcar_test} evaluates differences in expected mean or count according
  to a specified missing/non missing variable
 }
 \details{
-Prior to identifying structure in the data, it is useful to ask whether
-there is sufficient missingness to warrant such an investigation - and to
-try and determine whether the data is missing completely at random (MCAR).
-This can be done by splitting the data into two groups according to the
-presence or absence of a selected dependent variable, and to apply a t-test
-if the independent variables are continuous or a chi-square test if they are
+Prior to identifying structure in the data, it is useful to ask whether there
+is sufficient missingness to warrant such an investigation - and to try and
+determine whether the data is missing completely at random (MCAR). This can
+be done by splitting the data into two groups according to the presence or
+absence of a selected dependent variable, and to apply a t-test if the
+independent variables are continuous or a chi-square test if they are
 discrete, in order to determine equality of the means or the category
 probabilities, respectively. A Bonferroni adjustment (or similar) method can
 be used to allow for multiple tests. This mcar_test is based off of the test
@@ -41,9 +43,5 @@ for whether data is completely missing at random, from Little(1988)
 
 \section{Warning}{
  the data must contain only numerical values - No strings!
-}
-
-\section{Warning}{
- Check whether Little used this test first.
 }
 
