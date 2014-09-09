@@ -4,7 +4,6 @@
 ## I'm interested to see the differences in fitting the model using gbm.step
 ## and regular old gbm
 
-
 data(sim.dat)
 
 library(gbm)
