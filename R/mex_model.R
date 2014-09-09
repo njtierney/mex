@@ -13,49 +13,51 @@
 #' @param data       Dataset you are using.
 #' @format Gives a dataset called mex.clust
 #' @section Warning: This section is still undergoing testing.
+#' @import magrittr
+#' @import rpart
+#' @import rpart.plot
 #' @export
 
-mex_model <- function (data) {
+mex_model <- function (data, ...) {
   
-  ## run the clustering on a dataset made of the 
-  hclust.fit <- hclust(dist(is.na.data.frame(data)))
-    
-  ## cut the hclust into 4 pieces.
-  c.id <- as.factor(cutree(hclust.fit, 4))
+  # run the clustering on a dataset get the data, then make it an na.matrix,
+  # then calculate euclidean distance then perform hierarchical clustering
+  hclust.fit <- data %>%
+                     is.na.data.frame %>%
+                     dist %>%
+                     hclust
+  
+  # use hclust.fit, cut it into 4 pieces, then make it a factor
+  c.id  <- hclust.fit %>%
+                      cutree(4) %>%
+                      as.factor
   
   ## add the 4 pieces into a dataframe
   sim.clust <- data.frame(data, 
                           c.id)
-  ##
-  ### The rpart section
-  ##
+
+  # ======
+  # rpart
+  # ======
   
-  ## load the rpart library
-  library(rpart)
-  
-  mex.cart <- rpart(c.id ~ C1 + C2 + C3 + F1 + F2,
+  # run the rpart model, using all variables (specified by . ) 
+  mex.cart <- rpart(c.id ~ . ,
                       data = sim.clust,
                       na.action = na.rpart, 
                       method = "class")
   
-  #load the rpart plotting library
-  library(rpart.plot)
-  
   ## plot the rpart tree - currently doesn't allow us to plot it ourselves
-  mex.cart.plot <- prp(cart.small, 
+  mex.cart.plot <- prp(mex.cart, 
                         extra = 1, 
                         type = 4, 
-                        prefix = "Prop. Miss = ")
+                        prefix = "Miss Clust = ")
 
-  #
   
+  # ================
+  # function output
+  # ================
   
-  
-  ##
-  ### What is included in the output of the function?
-  ##
-
-  # list of the commands returned from the function
+  # list commands returned from the function
   list(mex.clust = sim.clust,
        mex.cart = mex.cart,
        mex.cart.plot = mex.cart.plot)
