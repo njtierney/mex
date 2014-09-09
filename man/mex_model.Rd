@@ -4,7 +4,7 @@
 \title{mex_model}
 \format{Gives a dataset called mex.clust}
 \usage{
-mex_model(data)
+mex_model(data, ...)
 }
 \arguments{
 \item{data}{Dataset you are using.}
