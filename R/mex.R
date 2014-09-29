@@ -9,6 +9,11 @@
 #' This is the main function in the \code{mex} package.  It runs all of the
 #' routines for exploring missing data and returns a \code{mex} object which
 #' contains all of the results.
+#' 
+#' @import magrittr
+#' @import rpart
+#' @import rpart.plot
+#' @import dplyr
 #'
 #' @export
 mex <- function(...)
