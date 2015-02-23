@@ -1,10 +1,11 @@
 Package: mex
-Title: mex helps researchers explore missing data precisely
-Version: 0.1
-Authors@R: c(person("Nicholas", "Tierney", role = c("aut", "cre"),
-    email = "nicholas.tierney@gmail.com"),
-    person("Damjan", "Vukcevic", role = c("aut", "cre"),
-    email = "damjan.vukcevic@mcri.edu.au"))
+Title: A Tool To More Precisely Explore Missing Data
+Version: 0.0.0.9000
+Authors@R: c(
+    person("Nicholas", "Tierney", email = "nicholas.tierney@gmail.com",
+    role = c("aut", "cre")),
+    person("Damjan", "Vukcevic", email = "damjan.vukcevic@mcri.edu.au",  
+    role = c("aut", "cre")))
 Author: Nicholas Tierney and Damjan Vukcevic
 Maintainer: Nicholas Tierney <nicholas.tierney@gmail.com> and
     Damjan Vukcevic <damjan.vukcevic@mcri.edu.au>
@@ -12,20 +13,20 @@ Description: mex provides a small toolbox for the researcher to explore their
     missing data. These tools consist of: t-tests and chi2, CART, BRT,
     clustering, and a missing data simulator.  The t-test / chi2 tests compare
     whether the missingness is affecting the expected count or mean value.  The
-    CART (rpart) and BRT (gbm and gbm.step) functions to explore the proportion
+    CART (rpart) and BRT (gbm and gbm.step) functions explore the proportion
     of missing data in a row, and also interact with clustering (undecided
-    which method) of missingness.  The data simulation function also makes it
+    method) of missingness.  The data simulation function also makes it
     easy to create specific missingness patterns, as well as compare theorized
     missingness patterns found in your research.
 Depends:
     R (>= 3.1.1)
 Imports:
-    dplyr,
-    magrittr,
-    rpart,
-    rpart.plot,
-    ggplot2,
-    knitr
+    dplyr (>= 0.4),
+    magrittr (>= 1.0.1),
+    rpart (>= 4.1.8),
+    rpart.plot (>= 1.4.4),
+    ggplot2 (>= 1.0.0),
+    knitr (>= 1.6)
 License: MIT
 LazyData: true
 URL: NA
