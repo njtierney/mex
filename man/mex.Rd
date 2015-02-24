@@ -6,6 +6,9 @@
 \usage{
 mex(...)
 }
+\arguments{
+\item{data}{A dataset that is of class `data.frame`}
+}
 \description{
 Fit models to explore the structure of missing values in a dataset.
 }

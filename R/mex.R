@@ -14,6 +14,8 @@
 #' @import rpart
 #' @import rpart.plot
 #' @import dplyr
+#' 
+#' @param data A dataset that is of class `data.frame`
 #'
 #' @export
 mex <- function(...)
@@ -25,7 +27,9 @@ mex <- function(...)
 # ============================================================================
 
 #' @export
-mex.data.frame <- function(data, ...)
+#' @param data = 
+mex.data.frame <- function(data, 
+                           ...)
 {
 
   # ========================
