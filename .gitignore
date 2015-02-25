@@ -7,13 +7,9 @@
 .Rdata
 .Rproj.user
 vignettes/draft-vignette_cache/html/__packages
-
 vignettes/draft-vignette_cache/html/brt.example_f6e4afb6204e54f2ff7de4fe3e679c6e.rdb
-
 *.RData
-
 *.rdx
-
 *.rdb
-
 vignettes/draft-vignette_cache/latex/__packages
+inst/doc
