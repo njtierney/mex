@@ -1,7 +1,8 @@
+#' Model-assisted missing data exploration
+#' 
 # ============================================================================
 # Generics
 # ============================================================================
-
 #' Model-assisted missing data exploration
 #'
 #' Fit models to explore the structure of missing values in a dataset.
@@ -27,7 +28,6 @@ mex <- function(...)
 # ============================================================================
 
 #' @export
-#' @param data = 
 mex.data.frame <- function(data, 
                            ...)
 {
@@ -62,32 +62,30 @@ mex.data.frame <- function(data,
     # run the rpart model, using all variables (specified by . ) 
     rpart.mex <- rpart(c.id ~ . ,
                       data = hclust.mex,
-                      na.action = na.rpart, 
-                      method = "class")
+                      na.action = na.rpart, # surrogate approach 
+                      method = "class") # a classification tree
     
-    ## plot the rpart tree - currently doesn't allow us to plot it ourselves
+    ## plot the rpart tree
     rpart.plot <- prp(rpart.mex, 
                       extra = 1, 
                       type = 4, 
                       prefix = "Miss Clust = ")
+    
+    ## Error: currently doesn't allow us to plot it ourselves
   
   # =======
   # output
   # =======
   
+  # output the new dataframe, the rpart object, and the rpart plot.
   structure(list(
     hclust.mex = hclust.mex,
     rpart.mex = rpart.mex,
     rpart.plot = rpart.plot
-    ), class = "mex")
+    ), 
+    class = "mex")
   
-#     # Create a `mex` object and return.
-#     res <- data
-#     # make res gain an additional class, mex
-#     class(res) <- c("mex", class(res))
-#   
-#     return(res)
-}
+} # end mex.data.frame approach
 
 #' @export
 mex.default <- function(x, ...)
@@ -99,7 +97,6 @@ mex.default <- function(x, ...)
     class(res) <- c("mex", class(res))
     return(res)
 }
-
 
 # ============================================================================
 # Methods
