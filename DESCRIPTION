@@ -18,9 +18,9 @@ Description: mex provides a small toolbox for the researcher to explore their
     method) of missingness.  The data simulation function also makes it
     easy to create specific missingness patterns, as well as compare theorized
     missingness patterns found in your research.
-Depends:
+Depends: 
     R (>= 3.1.1)
-Imports:
+Imports: 
     dplyr (>= 0.4),
     magrittr (>= 1.0.1),
     rpart (>= 4.1.8),
@@ -30,6 +30,7 @@ Imports:
 License: MIT
 LazyData: true
 URL: NA
-Suggests:
-    NA
-VignetteBuilder: NA
+Suggests: 
+    knitr
+VignetteBuilder:
+    knitr
